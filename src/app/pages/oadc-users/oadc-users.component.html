@@ -1,0 +1,256 @@
+<ol class="breadcrumb float-xl-end">
+    <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
+    <li class="breadcrumb-item"><a href="javascript:;">Manage Users</a></li>
+
+</ol>
+<!-- END breadcrumb -->
+<!-- BEGIN page-header -->
+<app-ngxloader [ngxloader]="ngxloading"></app-ngxloader>
+
+<h1 class="page-header">Manage Users </h1>
+<div class="d-flex align-items-center mb-3">
+    <div *ngIf="!toggleFormView">
+        <div class="row">
+            <!-- <label class="form-label col-form-label col-md-3">Inline Radios</label> -->
+            <div class="col-md-12 pt-2">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="inlineRadio1" name="inlineRadio" />
+                    <label class="form-check-label" for="inlineRadio1">All Users</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="customRadio2" name="inlineRadio" />
+                    <label class="form-check-label" for="customRadio2">OADC Staff</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="customRadio2" name="inlineRadio" />
+                    <label class="form-check-label" for="customRadio2">OADC End Users</label>
+                </div>
+            </div>
+        </div>
+        <h1 class="page-header mb-0"> </h1>
+    </div>
+    <div class="ms-auto">
+        <!-- <a href="#modal-dialog" class="btn btn-primary m-2" data-bs-toggle="modal" *ngIf="organizationUserPagePer.create" (click)="addApplicant = true;addOrganizationUser()">Add Applicant</a>
+        <a href="#modal-dialog" class="btn btn-primary" data-bs-toggle="modal" *ngIf="organizationUserPagePer.create" (click)="addApplicant = false;addOrganizationUser()">Add Organization User</a> -->
+        <a href="#modal-dialog" class="btn btn-success m-2" data-bs-toggle="modal" (click)="toggleForm()"><i
+                class="fas fa-plus"></i> New</a>
+
+    </div>
+</div>
+
+<!-- <div *ngIf="organizationUserPagePer.create"> -->
+<!-- <div>
+    <div class="row mb-15px"  >
+        <label class="form-label col-form-label col-md-1">Select Organization</label>
+        <div class="col-md-4">
+            <select class="form-select" name="selectedOrganizationId" [(ngModel)]="selectedOrganizationId">
+                <option  [ngValue]="1">Select 1</option>
+            </select>
+        </div>
+
+    </div>
+</div> -->
+
+<!-- <div class="row mb-50px" *ngIf="isAdmin">
+    <label class="form-label col-form-label col-md-1">Select File</label>
+    <div class="col-md-4">
+        <div>
+            <div class="input-group">
+                <input #applicantWaiver type="file" class="upload form-control"
+                    (change)="changeListener($event.target.files)" accept=".pdf" name="waiver_form" />
+                &nbsp;&nbsp;<a *ngIf="uploadedFile" class="btn btn-sm btn-primary" (click)="uploadWaiverForm()"
+                    style="line-height: 26px;"> Upload</a>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+
+<div class="row" *ngIf="!toggleFormView">
+    <div class="col-xl-12">
+
+        <p-table #orgUsers styleClass="p-datatable-sm" [value]="organizationsUsers" selectionMode="single"
+            dataKey="email" [lazy]="false" [paginator]="true" [rows]="10" [totalRecords]="totalRecords"
+            [loading]="loading" [globalFilterFields]="['firstName','last', 'email', 'phone','role']">
+
+            <ng-template pTemplate="caption">
+                <div class="row flex" *ngIf="organizationsUsers && organizationsUsers.length>0">
+
+                    <div class="col-md-12" style="text-align: right;">
+                        <span class="" style="padding-right:4px">
+                            <button style="padding: 2px 2px !important; width:4rem;" type="button"
+                                (click)="refreshGrid()" class="p-element btn btn-default btn-lg border"
+                                pTooltip="Refresh Grid" tooltipPosition="top">
+                                <i class="fas fa-arrows-rotate"></i>
+                            </button>
+                        </span>
+                        <span class="p-input-icon-left ml-auto">
+
+                            <i class="pi pi-search"></i>
+                            <input style="padding: 2px 2.5rem;" pInputText type="text"
+                                (input)="orgUsers.filterGlobal($event.target.value, 'contains')"
+                                placeholder="Search keyword" />
+                        </span>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="firstname">First Name <p-sortIcon field="firstname"></p-sortIcon></th>
+                    <th pSortableColumn="lastname">Last Name <p-sortIcon field="lastname"></p-sortIcon></th>
+                    <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
+                    <th pSortableColumn="phone">Phone <p-sortIcon field="phone"></p-sortIcon></th>
+                    <th pSortableColumn="accountType">Account Type <p-sortIcon field="accountType"></p-sortIcon></th>
+                    <th pSortableColumn="lastLogin">Last Login <p-sortIcon field="lastLogin"></p-sortIcon></th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-user>
+                <tr>
+                    <td>{{user.firstname}}</td>
+                    <td>{{user.lastname}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.phone}}</td>
+                    <td>{{user.accountType}}</td>
+                    <td>{{user.lastLogin}}</td>
+
+                    <td>
+                        <a class="btn btn-xs btn-info ms-2"> <i class="fas fa-pencil"></i> Edit </a>
+                        <a class="btn btn-xs btn-default ms-2"> <i class="fas fa-lock"></i> Unlock </a>
+                        <a class="btn btn-xs btn-danger ms-2"> <i class="fas fa-trash"></i> Delete </a>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" *ngIf="!organizationsUsers" pTemplate="emptymessage">
+                <tr>
+                    <td class="text-center" colspan="6">No data found </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<div class="row" *ngIf="toggleFormView">
+
+    <form #f="ngForm" (ngSubmit)="formSubmit(f)" class="fs-13px">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+
+                </div>
+                <div class="col-8">
+
+                    <!-- <panel title="Add User">  -->
+                    <div class="modal-body">
+                        <div class="card-body">
+                            <div class="mb-4"><h3>Add New User</h3></div>
+                            <div class="mb-3">
+                                <label class="form-label">Username <span class="text-red">*</span></label>
+                                <input type="text" name="firstname" class="form-control" placeholder="User Name"
+                                    [(ngModel)]="user.firstname">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Full Name <span class="text-red">*</span></label>
+                                <input type="text" name="lastname" class="form-control" placeholder="Full Name"
+                                    [(ngModel)]="user.lastname">
+                                <!-- <input type="hidden" name="organizationId" class="form-control" placeholder="Name" [(ngModel)]="organizationId" >                         -->
+                                <!-- <input type="hidden" name="createdBy" class="form-control" placeholder="Name" [(ngModel)]="createdBy" >                         -->
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Preferred Name <span class="text-red">*</span></label>
+                                <input type="text" name="email" class="form-control" placeholder="Preferred Name"
+                                    [(ngModel)]="user.email">
+                            </div>
+                       
+                            <div class="mb-3">
+                                <label class="form-label">Status</label>
+                                 <select class="form-control">
+                                    <option value="">Select</option>
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                 </select>
+                            </div>
+                            <div class="mb-3">
+                                <!-- <label class="form-label">Primary Role <span class="text-red">*</span></label> -->
+                                <button mat-button [matMenuTriggerFor]="roles" class="form-label" style="border: 1px solid #494949;">Select a User Type </button>
+                                <div>
+                                    <mat-menu #roles="matMenu">
+                                        <button mat-menu-item [matMenuTriggerFor]="OADC">OADC User</button>
+                                        <button mat-menu-item [matMenuTriggerFor]="OADCEndUser">OADC End User</button>
+                                        <button mat-menu-item [matMenuTriggerFor]="Contractor">Contractor</button>  
+                                    </mat-menu>
+
+                                    <mat-menu #OADC="matMenu">
+                                        <!-- <button mat-menu-item [matMenuTriggerFor]="fish">Supervisors</button> -->
+                                        <button mat-menu-item>Supervisors</button>
+                                        <button mat-menu-item>Administrators</button>
+                                        <button mat-menu-item>OADC Staff</button> 
+                                    </mat-menu>
+ 
+<!-- 
+                                    <mat-menu #fish="matMenu">
+                                        <button mat-menu-item>Baikal oilfish</button>
+                                        <button mat-menu-item>Bala shark</button>
+                                        <button mat-menu-item>Ballan wrasse</button>
+                                        <button mat-menu-item>Bamboo shark</button>
+                                        <button mat-menu-item>Banded killifish</button>
+                                    </mat-menu> -->
+
+                                    <mat-menu #OADCEndUser="matMenu">
+                                        <button mat-menu-item>Attorneys</button>
+                                        <button mat-menu-item>Subcontracting Attorneys</button>
+                                        <button mat-menu-item>Case Assistants</button>
+                                        <button mat-menu-item>Forensic Clinical Advocates</button>
+                                        <button mat-menu-item>FWS/FCA Supervisors</button>
+                                        <button mat-menu-item>FWS/FCA Interns</button>
+                                        <button mat-menu-item>Investigators</button>
+                                        <button mat-menu-item>Legal Researchers</button>
+                                        <button mat-menu-item>Paralegals</button>
+                                        <button mat-menu-item>Legal Assistants</button>
+                                        <button mat-menu-item>Researchers</button>
+                                        <button mat-menu-item>Resource Advocates</button>
+                                        <button mat-menu-item>Scanners</button> 
+                                    </mat-menu>
+
+                                    <mat-menu #Contractor="matMenu">
+                                        <button mat-menu-item>Experts</button>
+                                        <button mat-menu-item>Transcribers</button>
+                                        <button mat-menu-item>Interpreters</button> 
+                                    </mat-menu>
+
+                                     
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a #hidden href="javascript:;" class="btn btn-white ms-2" data-bs-dismiss="modal" (click)="this.toggleForm()">Close</a>
+                        <button type="submit" aria-hidden="true" class="btn btn-success ms-2" (click)="this.toggleForm()">Save</button>
+                    </div>
+                <!-- </panel> -->
+                </div>
+                <div class="col">
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- #modal-dialog -->
+
+
+<!-- <div class="modal fade" id="modal-dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">User Details</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div>
+
+
+        </div>
+    </div>
+</div> -->

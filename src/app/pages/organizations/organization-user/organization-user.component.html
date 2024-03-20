@@ -1,0 +1,266 @@
+<ol class="breadcrumb float-xl-end">
+    <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
+    <li class="breadcrumb-item"><a href="javascript:;">Manage Organization Users</a></li>
+
+</ol>
+<!-- END breadcrumb -->
+<!-- BEGIN page-header -->
+<app-ngxloader [ngxloader]="ngxloading"></app-ngxloader>
+
+<h1 class="page-header">Manage Organization Users </h1>
+<div class="d-flex align-items-center mb-3">
+    <!-- <div>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="javascript:;">Manage Oganization Users </a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Add New Organization User</a></li>
+        </ol>
+        <h1 class="page-header mb-0"> </h1>
+    </div>-->
+    <div class="ms-auto">
+        <!-- <a href="#modal-dialog" class="btn btn-primary m-2" data-bs-toggle="modal" *ngIf="organizationUserPagePer.create" (click)="addApplicant = true;addOrganizationUser()">Add Applicant</a>
+        <a href="#modal-dialog" class="btn btn-primary" data-bs-toggle="modal" *ngIf="organizationUserPagePer.create" (click)="addApplicant = false;addOrganizationUser()">Add Organization User</a> -->
+        <a href="#modal-dialog" class="btn btn-primary m-2" data-bs-toggle="modal"
+            *ngIf="isAdmin  || this.userProfile.role == 'OrganizationAdmin' "
+            (click)="addApplicant = true;addOrganizationUser()">Add User</a>
+        <a href="#modal-dialog" class="btn btn-primary" data-bs-toggle="modal" *ngIf="isAdmin"
+            (click)="addApplicant = false;addOrganizationUser()">Add Organization User</a>
+    </div>
+</div>
+
+<!-- <div *ngIf="organizationUserPagePer.create"> -->
+<div>
+    <div class="row mb-15px" *ngIf="isAdmin">
+        <label class="form-label col-form-label col-md-1">Select Organization</label>
+        <div class="col-md-4">
+            <select class="form-select" (change)="changeOrganization()" [(ngModel)]="selectedOrganizationId">
+                <option *ngFor="let ozn of organizations" [ngValue]="ozn._id">{{ozn.organizationName}}</option>
+            </select>
+        </div>
+
+    </div>
+</div>
+
+<!-- <div class="row mb-50px" *ngIf="isAdmin">
+    <label class="form-label col-form-label col-md-1">Select File</label>
+    <div class="col-md-4">
+        <div>
+            <div class="input-group">
+                <input #applicantWaiver type="file" class="upload form-control"
+                    (change)="changeListener($event.target.files)" accept=".pdf" name="waiver_form" />
+                &nbsp;&nbsp;<a *ngIf="uploadedFile" class="btn btn-sm btn-primary" (click)="uploadWaiverForm()"
+                    style="line-height: 26px;"> Upload</a>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+
+<div class="row">
+    <div class="col-xl-12">
+        <!-- <panel title="Manage Oganization Users">
+         <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>role</th>
+                        <th nowrap>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr  *ngFor="let user of organizationsUsers; let i=index;">
+                         <td>{{i+1}}</td> 
+                        <td>{{user.firstname}}</td>
+                        <td>{{user.lastname}}</td>
+                        <td>{{user.email}}</td>
+                        <td>{{user.phone}}</td>
+                        <td>{{user.role}}</td>
+                        <td>
+                            <a href="#modal-dialog" class="btn btn-sm btn-icon btn-circle btn-success" *ngIf="organizationUserPagePer.update" (click)="editOrganizationUser(user.cognitouserid)" data-bs-toggle="modal"> <i class="fas fa-pencil"></i> </a> &nbsp;&nbsp;
+                            <a class="btn btn-sm btn-icon btn-circle btn-danger" *ngIf="organizationUserPagePer.delete"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div> 
+        </panel>-->
+        <!--(onLazyLoad)="loadUser($event)"  [(selection)]="selectedOrganizationsUsers" (selectionChange)="onSelectionChange($event)"-->
+        <p-table #orgUsers styleClass="p-datatable-sm" [value]="organizationsUsers" selectionMode="single"
+            dataKey="email" [lazy]="false" [paginator]="true" [rows]="10" (onRowSelect)="onRowSelect($event)"
+            [totalRecords]="totalRecords" [loading]="loading"
+            [globalFilterFields]="['firstName','last', 'email', 'phone','role']">
+            <!-- <ng-template pTemplate="caption">
+            <div class="flex"> -->
+            <!-- <button type="button" pButton pRipple icon="pi pi-file" (click)="dt.exportCSV()" class="mr-2" pTooltip="CSV" tooltipPosition="bottom"></button> selectionMode="single" [(selection)]="selectedProduct1" dataKey="code" -->
+            <!-- <button type="button" pButton pRipple icon="pi pi-file-excel"
+                    (click)="exportExcel()" class="p-button-success mr-2" pTooltip="XLS"
+                    tooltipPosition="bottom"></button> -->
+            <!-- <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdf()" class="p-button-warning mr-2" pTooltip="PDF" tooltipPosition="bottom"></button> -->
+            <!-- pRipple icon="pi pi-filter" (click)="dt.exportCSV({selectionOnly:true})" class="p-button-info ml-auto" pTooltip="Selection Only" tooltipPosition="bottom"></button><button type="button" pButton  -->
+            <!-- </div>
+        </ng-template> -->
+            <ng-template pTemplate="caption">
+                <div class="row flex" *ngIf="organizationsUsers && organizationsUsers.length>0">
+                    <div class="col-md-4">
+                        &nbsp;&nbsp;&nbsp;<button style="padding: 0px 0px !important;
+                width: 2rem;" type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()"
+                            class="p-button-success mr-2" pTooltip="XLS" tooltipPosition="bottom"></button>
+                    </div>
+                    <div class="col-md-8" style="text-align: right;">
+                        <span class="" style="padding-right:4px">
+                            <button style="padding: 2px 2px !important; width:4rem;" type="button"
+                                (click)="refreshGrid()" class="p-element btn btn-default btn-lg border" pTooltip="Refresh Grid" tooltipPosition="top"> 
+                                <i class="fas fa-arrows-rotate"></i>
+                            </button>
+                        </span>
+                        <span class="p-input-icon-left ml-auto">
+
+                            <i class="pi pi-search"></i>
+                            <input style="padding: 2px 2.5rem;" pInputText type="text"
+                                (input)="orgUsers.filterGlobal($event.target.value, 'contains')"
+                                placeholder="Search keyword" />
+                        </span>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="firstname">Firstname <p-sortIcon field="firstname"></p-sortIcon></th>
+                    <th pSortableColumn="lastname">Lastname <p-sortIcon field="lastname"></p-sortIcon></th>
+                    <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
+                    <th pSortableColumn="phone">Phone <p-sortIcon field="phone"></p-sortIcon></th>
+                    <th pSortableColumn="role">Role <p-sortIcon field="role"></p-sortIcon></th>
+                    <th *ngIf="isAdmin  || this.userProfile.role == 'OrganizationAdmin'">Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-user>
+                <tr>
+                    <td>{{user.firstname}}</td>
+                    <td>{{user.lastname}}</td>
+                    <td [ngClass]="{'bg-red-100': !user.emailverfied}">{{user.email}}</td>
+                    <td>{{user.phone}}</td>
+                    <td *ngIf="user.role=='OrganizationViewer'">Applicant</td>
+                    <td *ngIf="user.role!='OrganizationViewer'">{{user.role}}</td>
+                    <td *ngIf="isAdmin  || this.userProfile.role == 'OrganizationAdmin'">
+                        <a   class="btn btn-sm  btn-default"
+                        *ngIf="(organizationUserPagePer.update || isAdmin) && user.isSignUpUserApproved == false"
+                            (click)="editOrganizationUser(user)"> Approve  </a>  
+
+                        <!-- <a href="#modal-dialog" class="btn btn-sm btn-icon btn-circle btn-success"
+                            *ngIf="organizationUserPagePer.update || isAdmin"
+                            (click)="editOrganizationUser(user.cognitouserid)" data-bs-toggle="modal"> <i
+                                class="fas fa-pencil"></i> </a> &nbsp;&nbsp;
+                        <a class="btn btn-sm btn-icon btn-circle btn-danger"
+                            *ngIf="organizationUserPagePer.delete || isAdmin"
+                            (click)="deleteOrganizationUser(user.cognitouserid, user.firstname+''+user.lastname,user.email)"><i
+                                class="fas fa-trash"></i></a> -->
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" *ngIf="!organizationsUsers" pTemplate="emptymessage">
+                <tr>
+                    <td class="text-center" colspan="6">No data found </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+<!-- #modal-dialog -->
+<div class="modal fade" id="modal-dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Organization User Details</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div>
+            <form #f="ngForm" (ngSubmit)="formSubmit(f)" class="fs-13px">
+                <div class="modal-body">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">First Name <span class="text-red">*</span></label>
+                            <input type="text" name="userFirstName" class="form-control" placeholder="First Name"
+                                [(ngModel)]="user.firstName">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Last Name <span class="text-red">*</span></label>
+                            <input type="text" name="userLastName" class="form-control" placeholder="Last Name"
+                                [(ngModel)]="user.lastName">
+                            <!-- <input type="hidden" name="organizationId" class="form-control" placeholder="Name" [(ngModel)]="organizationId" >                         -->
+                            <!-- <input type="hidden" name="createdBy" class="form-control" placeholder="Name" [(ngModel)]="createdBy" >                         -->
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email <span class="text-red">*</span></label>
+                            <input type="text" name="userEmail" class="form-control" placeholder="Email"
+                                [(ngModel)]="user.email">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Mobile Number</label>
+                            <input type="text" name="userMobile" class="form-control" placeholder="Mobile"
+                                [(ngModel)]="user.mobile">
+                        </div>
+                        <div class="mb-3" *ngIf="isAdmin">
+                            <label class="form-label">Organization <span class="text-red">*</span></label>
+                            <select class="form-select" [(ngModel)]="user.organizationId" name="selectedOrganizationId">
+                                <option *ngFor="let ozn of organizations" [ngValue]="ozn._id">{{ozn.organizationName}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Role <span class="text-red">*</span></label>
+                            <select class="form-select" [(ngModel)]="user.role" name="selectedRole"
+                                *ngIf="!addApplicant">
+                                <!-- <option *ngFor="let ozn of organizations" [ngValue]="user.group">
+                                {{ozn.organizationName}}
+                            </option> -->
+                                <option value="Admin">Admin</option>
+                                <option value="OrganizationAdmin">Organization Admin</option>
+                                <!-- <option value="Recruiter">Recruiter</option> -->
+                            </select>
+                            <select class="form-select" [(ngModel)]="user.role" name="selectedRole"
+                                *ngIf="addApplicant">
+                                <option value="OrganizationViewer">User</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Recruiters</label>
+                            <ng-multiselect-dropdown [settings]="dropdownSettings" [data]="dropdownList"
+                                [(ngModel)]="selectedItems" (onSelect)="onItemSelect($event)"
+                                (onSelectAll)="onSelectAll($event)" [ngModelOptions]="{standalone: true}">
+                            </ng-multiselect-dropdown>
+                        </div>
+
+                        <div class="mb-3" *ngIf="addApplicant">
+                            <label class="form-label">Due Date Exampted </label>
+                            <div class="input-group">
+                                <input class="form-control" class="form-control datepicker-only-month-select"
+                                    placeholder="mm-dd-yyyy" name="dueDateExempted" [(ngModel)]="user.dueDateExempted"
+                                    ngbDatepicker #d1="ngbDatepicker" #dueDateExempted="ngModel"
+                                    placeholder="MM/DD/YYYY">
+                                <button class="btn btn-outline-secondary" (click)="d1.toggle()" type="button">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            </div>
+                            <!-- <div *ngIf="dueDateExempted.touched && dueDateExempted.invalid">
+                            <small class="form-text text-danger" *ngIf="dueDateExempted.errors.required">
+                                This field is required.
+                            </small>
+                            <small class="form-text text-danger"
+                                *ngIf="dueDateExempted.errors.ngbDate?.invalid">
+                                day of date must be a valid date (Ex: mm/dd/yyyy).
+                            </small>
+                        </div> -->
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a #hidden href="javascript:;" class="btn btn-white" data-bs-dismiss="modal">Close</a>
+                    <button type="submit" aria-hidden="true" class="btn btn-success">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

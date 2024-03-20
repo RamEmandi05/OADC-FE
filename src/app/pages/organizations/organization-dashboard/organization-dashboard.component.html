@@ -1,0 +1,547 @@
+<ol class="breadcrumb float-xl-end">
+    <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
+    <li class="breadcrumb-item"><a href="javascript:;">Manage Organization</a></li>
+
+</ol>
+<app-ngxloader [ngxloader]="ngxloading"></app-ngxloader>
+
+<!-- END breadcrumb -->
+<!-- BEGIN page-header -->
+<h1 class="page-header">Manage Organization </h1>
+<div class="d-flex align-items-center mb-3" *ngIf="organizationPagePer.create || isAdmin">
+    <!-- <div>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="javascript:;">Manage Oganizations</a></li>
+            <li class="breadcrumb-item"><a href="javascript:;">Add New Organization</a></li>
+        </ol>
+        <h1 class="page-header mb-0"> </h1>
+    </div> -->
+    <div class="ms-auto">
+        <a href="#modal-dialog" class="btn btn-primary" data-bs-toggle="modal" (click)="addOrganization()">Add New
+            Organization</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <!--<panel title="Manage Oganizations">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th nowrap>Organization Name</th>
+                            <th nowrap>Verification Code Enabled</th>
+                            <th nowrap>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let org of organizations;let i=index;">
+                            <td>{{i+1}}</td>
+                            <td>{{org.organizationName}}</td>
+                            <td>{{org.isVerificationEnabled}}</td>
+                            <td>
+                                <a href="#modal-dialog" class="btn btn-sm btn-icon btn-circle btn-success" *ngIf="organizationPagePer.update" (click)="editOrganization(org)" data-bs-toggle="modal"> <i class="fas fa-pencil"></i> </a> &nbsp;&nbsp;
+                                <a class="btn btn-sm btn-icon btn-circle btn-danger" *ngIf="organizationPagePer.delete"><i class="fas fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </panel>-->
+        <!-- (onLazyLoad)="loadOrganizations($event)" (onRowSelect)="onRowSelect($event)"  (selectionChange)="onSelectionChange($event)"-->
+        <p-table #orgs styleClass="p-datatable-sm" [value]="organizations" selectionMode="single"
+            [(selection)]="selectedOrganizations" dataKey="email" [lazy]="false" [paginator]="true" [rows]="10"
+            [totalRecords]="totalRecords" [loading]="loading"
+            [globalFilterFields]="['organizationName','isVerificationEnabled']">
+            <ng-template pTemplate="caption">
+                <div class="row flex">
+                    <div class="col-md-4" ng-if="organizations.length>0">
+                        &nbsp;&nbsp;&nbsp;<button style="padding: 0px 0px !important;
+                                        width: 2rem;" type="button" pButton pRipple icon="pi pi-file-excel"
+                            (click)="exportExcel()" class="p-button-success mr-2" pTooltip="XLS"
+                            tooltipPosition="bottom"></button>
+                    </div>
+                    <div class="col-md-8" style="text-align: right;">
+                        <span class="" style="padding-right:4px">
+                            <button style="padding: 2px 2px !important; width:4rem;" type="button"
+                                (click)="refreshGrid()" class="p-element btn btn-default btn-lg border" pTooltip="Refresh Grid" tooltipPosition="top"> 
+                                <i class="fas fa-arrows-rotate"></i>
+                            </button>
+                        </span>
+                        <span class="p-input-icon-left ml-auto">
+                            <i class="pi pi-search"></i>
+                            <input style="padding: 2px 2.5rem;" pInputText type="text"
+                                (input)="orgs.filterGlobal($event.target.value, 'contains')"
+                                placeholder="Search keyword" />
+                        </span>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="organizationName">Organization Name <p-sortIcon field="name"></p-sortIcon></th>
+                    <th pSortableColumn="isVerificationEnabled">Verification Code Enabled for Message<p-sortIcon
+                            field="code"></p-sortIcon></th>
+                    <th pSortableColumn="isVerificationEnabledForMail">From Email <p-sortIcon
+                            field="emailCode"></p-sortIcon></th>
+                    <!-- <th>Actions </th> -->
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-organization>
+                <tr>
+                    <td>{{organization.organizationName}}</td>
+                    <td>{{organization.isVerificationEnabled}}</td>
+                    <td>{{organization.fromEmail}}</td>
+                    <!-- <td> <a href="#modal-dialog" class="btn btn-sm btn-icon btn-circle btn-success"
+                            *ngIf="organizationPagePer.update" (click)="editOrganization(organization)"
+                            data-bs-toggle="modal"> <i class="fas fa-pencil"></i> </a> &nbsp;&nbsp;
+                        <a class="btn btn-sm btn-icon btn-circle btn-danger" *ngIf="organizationPagePer.delete"
+                            (click)="deleteOrganization(organization.organizationName, organization._id)"><i
+                                class="fas fa-trash"></i></a>
+                    </td> -->
+
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" *ngIf="!organizations" pTemplate="emptymessage">
+                <tr>
+                    <td class="text-center" colspan="4">No data found </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+<!-- #modal-dialog -->
+<div class="modal fade" id="modal-dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Organization Details</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+            </div>
+            <form #f="ngForm" (ngSubmit)="formSubmit(f)" class="fs-13px">
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xl-12">
+
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item" (click)="defualtTab = 'org_details'">
+                                     
+                                </li>
+                             
+                            </ul>
+                            <div class="tab-content panel rounded-0">
+                                <div class="tab-pane fade" id="org_details"
+                                    [ngClass]="{'active show':defualtTab === 'org_details'}">
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div class="card-body">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Name</label>
+                                                    <input type="text" name="organizationName" class="form-control"
+                                                        placeholder="Name" [(ngModel)]="organizationName" required>
+                                                    <input type="hidden" name="_id" class="form-control"
+                                                        placeholder="Name" [(ngModel)]="_id">
+                                                    <input type="hidden" name="createdBy" class="form-control"
+                                                        placeholder="Name" [(ngModel)]="createdBy">
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <input type="checkbox" name="isVerificationEnabled"
+                                                        class="form-check-input" [(ngModel)]="isVerificationEnabled"
+                                                        value="" id="flexCheckChecked" checked="">
+                                                    <label for="flexCheckChecked" class="form-check-label"> Enable
+                                                        Verification Code for Message</label>
+                                                </div>
+                                                <hr />
+                                                <h6>SMS Configuration</h6>
+                                                <div class="mb-3" *ngIf="this.userProfile.role=='Admin'">
+                                                    <label class="form-label">Messaging Service Sid</label>
+                                                    <input type="text" name="messagingServiceSid" class="form-control"
+                                                        placeholder="Enter Messaging Service Sid"
+                                                        [(ngModel)]="messagingServiceSid" required>
+                                                </div>
+                                                <hr />
+                                                <h6>Email Configuration</h6>
+                                                <div class="mb-3">
+                                                    <label class="form-label">From Email</label>
+                                                    <input type="text" name="fromEmail" class="form-control"
+                                                        placeholder="From Email" [(ngModel)]="fromEmail" required>
+                                                </div>
+                                                <div class="mb-3" *ngIf="this.userProfile.role=='Admin'">
+                                                    <label class="form-label">Send Grid API Key</label>
+                                                    <input type="text" name="sendGridAPIKey" class="form-control"
+                                                        placeholder="Enter Send Grid API Key"
+                                                        [(ngModel)]="sendGridAPIKey" required>
+                                                </div>
+                                                <hr />
+                                                <h6>Reminder Email Settings</h6>
+                                                <div class="form-check mb-2">
+                                                    <input type="checkbox" name="isReminderEmailEnabled"
+                                                        class="form-check-input" [(ngModel)]="isReminderEmailEnabled"
+                                                        value="" id="flexCheckChecked2" checked="">
+                                                    <label for="flexCheckChecked2" class="form-check-label"> Send
+                                                        Reminder Email to users</label>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label">Select Email Frequency</label>
+                                                    <select name="selectedEmailFequency"
+                                                        (change)="changeEmailFrequency()" class="form-select"
+                                                        [(ngModel)]="selectedEmailFequency">
+                                                        <option value="">Select</option>
+                                                        <option value="HOURLY">HOURLY</option>
+                                                        <option value="DAILY">DAILY</option>
+                                                        <option value="WEEKLY">WEEKLY</option>
+                                                        <option value="MONTHLY">MONTHLY</option>
+                                                    </select>
+                                                </div>
+                                                <div class="">
+                                                    <h6>{{emailFrequencyMessage}}</h6>
+
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label">Days to lock the user</label>
+                                                    <input type="number" name="daystolockUser" class="form-control"
+                                                    placeholder="Ex: 30"
+                                                    [(ngModel)]="daystoLockUser" required>
+                                                </div>
+                                                <div class="">
+                                                    <h6>{{emailFrequencyMessage}}</h6>
+
+                                                </div>
+
+                                                <!-- <div class="mb-3"> 
+                                            <label class="form-label">Enable Verification Code</label>
+                                            <input type="checkbox" name="isVerificationEnabled" class="form-control" [(ngModel)]="isVerificationEnabled" >
+                                        </div>-->
+                                                <!-- <div class="mb-3">
+                                            <label class="form-label">Description</label>
+                                            <div class="form-control p-0 overflow-hidden">
+                                                <div class="NgxEditor__Wrapper border-0">
+                                                    <ngx-editor-menu [editor]="editor"> </ngx-editor-menu>
+                                                    <ngx-editor [editor]="editor" [(ngModel)]="html"
+                                                        [placeholder]="'Description...'"></ngx-editor>
+                    
+                                                </div>
+                    
+                                            </div>
+                                        </div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-content panel rounded-0">
+                                <div class="tab-pane fade" id="org_div_cheifs"
+                                    [ngClass]="{'active show':defualtTab === 'org_div_cheifs'}">
+
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div class="card-body">
+
+                                                <div class="col-12">
+                                                    <h6 class="">Orginzation Division Chiefs
+                                                    </h6>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <form class="row row-cols-lg-auto g-3 align-items-center"
+                                                        #f2="ngForm">
+                                                        <div class="col-lg-4">
+                                                            <input type="text" [(ngModel)]="OrgDivCheif.name"
+                                                                name="name" class="form-control" required id="name"
+                                                                placeholder="Name" />
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <input type="text" [(ngModel)]="OrgDivCheif.email"
+                                                                name="email" class="form-control" required id="email"
+                                                                placeholder="Email" />
+                                                        </div>
+                                                        <div class="col-lg-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input"
+                                                                    id="inline_form_checkbox" name="isendemail"
+                                                                    [(ngModel)]="OrgDivCheif.isSendEmail"
+                                                                    type="checkbox" />
+                                                                <label class="form-check-label"
+                                                                    for="inline_form_checkbox">Send Email</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-2">
+                                                            <div class="input-group">
+                                                                <button *ngIf="orgDivupdateId == null" type="button" class="btn btn-primary btn-sm"
+                                                                    [disabled]="!f2.form.valid"
+                                                                    (click)="addDivChief(OrgDivCheif)">Add </button>
+                                                                <button *ngIf="orgDivupdateId != null &&  orgDivupdateId > -1" type="button" class="btn btn-primary btn-sm" 
+                                                                    [disabled]="!f2.form.valid"
+                                                                    (click)="addDivChief(OrgDivCheif,orgDivupdateId)">Update </button>
+                                                            </div>
+                                                        </div>
+
+                                                    </form>
+                                                </div>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div class="card-body">
+                                                <table class="table table-bordered" id="biu_documentation">
+
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 30%;">
+                                                                Name
+                                                            </th>
+                                                            <th style="width: 30%;">
+                                                                Email
+                                                            </th>
+                                                            <th style="width: 15%;">
+                                                                Send Email
+                                                            </th>
+                                                            <th style="width: 25%;">
+                                                                Actions
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr
+                                                            *ngFor="let divCheif of this.OrgDivCheifData.orgDivCheifData; let cu=index;">
+                                                            <td>{{divCheif.name}}</td>
+                                                            <td>{{divCheif.email}}</td>
+                                                            <td>{{isSendStatus(divCheif.isSendEmail) }}</td>
+                                                            <td>
+                                                                <a class="btn btn-sm btn-icon btn-circle btn-success"
+                                                                (click)="editOrgDivCheif(divCheif,cu)"> <i class="fas fa-pencil"></i> </a> &nbsp;
+                                                                <a class="btn btn-sm btn-icon btn-circle btn-danger"  
+                                                                (click)="deleteOrgDivCheif(divCheif,cu)"><i
+                                                                class="fas fa-trash"></i></a> 
+                                                            </td>
+                                                        </tr>
+
+
+                                                    </tbody>
+                                                </table>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-content panel rounded-0">
+                                <div class="tab-pane fade" id="org_recruting_staff"
+                                    [ngClass]="{'active show':defualtTab === 'org_recruting_staff'}">
+
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div class="card-body">
+
+                                                <div class="col-12">
+                                                    <h6 class="">Recruiting Staff
+                                                    </h6>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <form class="row row-cols-lg-auto g-3 align-items-center"
+                                                        #recruitingForm="ngForm">
+                                                        <div class="col-lg-4">
+                                                            <input type="text" [(ngModel)]="OrgRecruitingStaff.name"
+                                                                name="name" class="form-control" required id="name"
+                                                                placeholder="Name" />
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <input type="text" [(ngModel)]="OrgRecruitingStaff.email"
+                                                                name="email" class="form-control" required id="email"
+                                                                placeholder="Email" />
+                                                        </div>
+                                                        <div class="col-lg-2">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input"
+                                                                    id="inline_form_checkbox" name="isendemail"
+                                                                    [(ngModel)]="OrgRecruitingStaff.isSendEmail"
+                                                                    type="checkbox"   />
+                                                                <label class="form-check-label"
+                                                                    for="inline_form_checkbox">Send Email</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-2">
+                                                            <div class="input-group">
+                                                                <button *ngIf="orgRecruitingupdateId == null" type="button" class="btn btn-primary btn-sm"
+                                                                    [disabled]="!recruitingForm.form.valid"
+                                                                    (click)="addRecruitingStaff(OrgRecruitingStaff)">Add </button>
+                                                                <button *ngIf="orgRecruitingupdateId != null &&  orgRecruitingupdateId > -1" type="button" class="btn btn-primary btn-sm" 
+                                                                    [disabled]="!recruitingForm.form.valid"
+                                                                    (click)="addRecruitingStaff(OrgRecruitingStaff,orgRecruitingupdateId)">Update </button>
+                                                            </div>
+                                                        </div>
+
+                                                    </form>
+                                                </div>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div class="card-body">
+                                                <table class="table table-bordered" id="org_recruiting">
+
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 30%;">
+                                                                Name
+                                                            </th>
+                                                            <th style="width: 30%;">
+                                                                Email
+                                                            </th>
+                                                            <th style="width: 15%;">
+                                                                Send Email
+                                                            </th>
+                                                            <th style="width: 25%;">
+                                                                Actions
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr
+                                                            *ngFor="let recruitStaff of this.orgRecruitingStaffData.orgRecruitingStaffData; let cu=index;">
+                                                            <td>{{recruitStaff.name}}</td>
+                                                            <td>{{recruitStaff.email}}</td>
+                                                            <td>{{isSendStatus(recruitStaff.isSendEmail) }}</td>
+                                                            <td>
+                                                                <a class="btn btn-sm btn-icon btn-circle btn-success"
+                                                                (click)="editOrgrecruitStaff(recruitStaff,cu)" > <i class="fas fa-pencil"></i> </a> &nbsp;
+                                                                <a class="btn btn-sm btn-icon btn-circle btn-danger"  
+                                                                (click)="deleteOrgrecruitStaff(recruitStaff,cu)"><i
+                                                                class="fas fa-trash"></i></a> 
+                                                            </td>
+                                                        </tr>
+
+
+                                                    </tbody>
+                                                </table>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-content panel rounded-0">
+                                <div class="tab-pane fade" id="org_payments"
+                                    [ngClass]="{'active show':defualtTab === 'org_payments'}">
+
+                                    <div class="row">
+                                        <div class="col-xl-12">
+                                            <div class="card-body">
+ 
+                                                <div class="mb-3">
+                                                    <form class="row row-cols-lg-auto g-3 align-items-center"
+                                                        #paymentForm="ngForm">
+                                                        <div class="col-lg-4" >
+                                                            <label>Payment Type</label>
+                                                            <!-- <input type="text" [(ngModel)]="orgRecruitingStaffData.payment.paymentType"
+                                                                name="name" class="form-control" required id="appFee"
+                                                                placeholder="Application Fee" maxlength="64" /> -->
+                                                                <select class="form-control" required
+                                                                [(ngModel)]="orgRecruitingStaffData.payment.paymentType"
+                                                                name="paymentType"
+                                                                placeholder="Select Payment Type" required >
+                                                                <option value="" selected>Select</option>
+                                                                <option value="{{pt}}" *ngFor="let pt of paymentTypes">
+                                                                    {{pt}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-lg-4" >
+                                                            <label>Amount</label>
+                                                            <input type="text" [(ngModel)]="orgRecruitingStaffData.payment.amount"
+                                                                name="email" class="form-control" required id="appFeeAmount"
+                                                                placeholder="Application Fee Amout" (keypress)="paymentValidation($event)" />
+                                                        </div>
+                                          
+                                                        <div class="col-lg-2  mt-40px">
+                                                            <div class="input-group">
+                                                                <button *ngIf="paymentUpdateId == null" type="button" class="btn btn-primary btn-sm"
+                                                                [disabled]="!paymentForm.form.valid"
+                                                                (click)="addPayment(orgRecruitingStaffData.payment)">Add </button>
+                                                            <button  type="button" class="btn btn-primary btn-sm"  *ngIf="paymentUpdateId != null &&  paymentUpdateId > -1"
+                                                                [disabled]="!paymentForm.form.valid"
+                                                                (click)="editPayment(orgRecruitingStaffData.payment,paymentUpdateId)">Update </button>
+                                                            </div>
+                                                        </div>
+
+                                                    </form>
+                                                </div>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-12"> 
+                                            <div class="card-body">
+                                                <table class="table table-bordered" id="org_payments">
+
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 30%;">
+                                                                Payment Type
+                                                            </th>
+                                                            <th style="width: 30%;">
+                                                                Amount
+                                                            </th>
+ 
+                                                            <th style="width: 25%;">
+                                                                Actions
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        
+                                                        <tr
+                                                            *ngFor="let payment of this.orgRecruitingStaffData.paymentData ;let pay=index;">
+                                                            <td>{{payment.paymentType}}</td>
+                                                            <td>${{payment.amount}}</td>
+                                                           
+                                                            <td>
+                                                                <a class="btn btn-sm btn-icon btn-circle btn-success"
+                                                                (click)="editPayment(payment,pay)"> <i class="fas fa-pencil"></i> </a> &nbsp;
+                                                                <a class="btn btn-sm btn-icon btn-circle btn-danger"  
+                                                                (click)="deletePayment(payment,pay)"><i
+                                                                class="fas fa-trash"></i></a> 
+                                                            </td>
+                                                        </tr>
+
+
+                                                    </tbody>
+                                                </table>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <a #hidden href="javascript:;" class="btn btn-white" data-bs-dismiss="modal" (click)="orgDivupdateId = null">Close</a>
+                    <button type="submit" [disabled]="!f.form.valid" aria-hidden="true"
+                        class="btn btn-success">Save</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

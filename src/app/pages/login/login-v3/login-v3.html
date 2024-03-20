@@ -1,0 +1,260 @@
+<!-- BEGIN login -->
+<div class="login login-with-news-feed" style="right: 0">
+	<div class="demo_button">
+		<!-- <a routerLink="/demo" class="text-right btn btn-primary "> Demo </a> -->
+	</div>
+
+
+	<div class="news-feed" style="background-image: url(/assets/img/login-bg/login-bg-8.jpg);right: 0;background-repeat: round;">
+
+		<div class="" style="     
+		top: 20%;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+		width: 50%;
+		left: 25%;
+		box-shadow: rgb(0, 0, 0) 5px 5px 5px;
+		border-radius: 5px;
+		border: 0px none;
+		height: 60%;">
+			<div class="box" style="height: 100%; text-align: center;border-right: 2px solid gray;">
+
+				<p><b>This is the ADC billing web site. To go to the ADC informational web site go to
+						http://www.coloradoadc.org</b></p>
+				<p>Questions regarding <b> PAYMENT REQUESTS </b>, e-mail Kim at: kim@coloradoadc.com, or call Kim
+					directly at: </p>
+				<p>720-994-2854 Ext 154</p>
+				<p></p>Questions regarding APPOINTMENTS, e-mail Wendy at: wendy@coloradoadc.com, or call Wendy directly
+				at:
+				<p>720-994-2847 Ext 147</p>
+				<p> <b> NOTE. THIS IS IMPORTANT!!</b></p>
+				<p>* All bills should be submitted every thirty-one days, but must be submitted every forty-five days
+					regardless of the amount outstanding.</p>
+				<p>* Failure to bill as provided above will result in the non-payment of any dates outside of the
+					forty-five days.</p>
+				<p>* Billing must be in increments of .1 (one tenth) of an hour. </p>
+
+			</div>
+
+			<div class="box" style="    width: 50%;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin: 0;
+			padding: 0;">
+
+
+
+				<div class=" " style="width: 90%;">
+					<div class="login-header mb-30px">
+						<div class="brand">
+							<div class="d-flex align-items-center">
+								<!-- {{appDafaults.appName}} -->
+								<!-- {{appDafaults.appIcon}} -->
+								<a href="https://www.coloradoadc.org/images/logo.jpg" class="navbar-brand"> <img
+										src="{{appDafaults.appIcon}}" width="90%" /> </a>
+							</div>
+						</div>
+					</div>
+					<form #f="ngForm" (ngSubmit)="formSubmit(f)" class="fs-13px"
+						*ngIf="(!isPasswordReset && !isForgotPassword && !verifyForgotPassword && !isMFASetUp)">
+						<div class="form-floating mb-15px">
+							<input type="text" class="form-control h-45px fs-13px" placeholder="Email Address"
+								id="emailAddress" name="emailAddress" ngModel />
+							<label for="emailAddress" class="d-flex align-items-center fs-13px text-gray-600">Email
+								Address</label>
+						</div>
+						<div class="form-floating mb-15px">
+							<input type="password" class="form-control h-45px fs-13px" placeholder="Password"
+								id="password" name="password" ngModel />
+							<label for="password"
+								class="d-flex align-items-center fs-13px text-gray-600">Password</label>
+						</div>
+						<div class="form-check mb-30px">
+							<input class="form-check-input" type="checkbox" value="1" id="rememberMe" />
+							<label class="form-check-label" for="rememberMe">
+								Remember Me
+							</label>
+						</div>
+						<div class="mb-15px">
+							<button type="submit" class="btn btn-primary d-block h-45px w-100 btn-lg fs-14px">Sign me
+								in</button>
+						</div>
+						<!-- d-flex align-items-center mb-3 -->
+						<div class="mb-40px pb-40px text-dark">
+							<span *ngIf="showErrorMessage" class="text-red-600">{{errorMessage}}</span>
+							<a class="text-primary" style="float: right;padding-right: 7px;"
+								(click)="triggerForgotPassword()">Forgot Password?</a>
+						</div>
+						<hr class="bg-gray-600 opacity-2" />
+						<div class="text-gray-600 text-center mb-0">
+							&copy; {{appDafaults.appName}} All Right Reserved {{currentYear}}
+						</div>
+					</form>
+					<form #f="ngForm" (ngSubmit)="formResetSubmit(f)" class="fs-13px" *ngIf="isPasswordReset">
+						<label>For security reasons please create a new password for your account.</label>
+						<div class="form-floating mb-15px">
+							<input type="password" class="form-control h-45px fs-13px"
+								placeholder="Enter temporary password sent to your email" id="oldpassword"
+								name="oldpassword" ngModel />
+							<label for="password" class="d-flex align-items-center fs-13px text-gray-600">Enter
+								temporary
+								password sent to your email</label>
+						</div>
+						<div class="form-floating mb-15px">
+							<input type="password" class="form-control h-45px fs-13px" placeholder="New Password"
+								id="newpassword" name="newpassword" ngModel />
+							<label for="password" class="d-flex align-items-center fs-13px text-gray-600">New
+								Password</label>
+						</div>
+						<div class="form-floating mb-15px">
+							<input type="password" class="form-control h-45px fs-13px"
+								placeholder="Re-enter New Password" id="reenterpassword" name="reenterpassword"
+								ngModel />
+							<label for="password" class="d-flex align-items-center fs-13px text-gray-600">Re-enter New
+								Password</label>
+						</div>
+						<div class="mb-15px">
+							<button type="submit" class="btn btn-primary d-block h-45px w-100 btn-lg fs-14px">Reset
+								Password</button>
+						</div>
+						<!-- <div class="mb-40px pb-40px text-dark">
+							Not a member yet? Click <a routerLink="/register/v3" class="text-primary">here</a> to register.
+						</div>
+						 -->
+					</form>
+					<form #f="ngForm" (ngSubmit)="formForgotPasswordSubmit(f)" class="fs-13px" *ngIf="isForgotPassword">
+						<h6>Forgot Password </h6>
+						<h6 class="text-red-600">{{passwordMessage}} <a *ngIf="hideVerifyPassword"
+								href='javascript:void(0)'>support@coloradorangers.gov</a></h6>
+						<div *ngIf="!hideVerifyPassword" class="form-floating mb-15px">
+							<input type="text" class="form-control h-45px fs-13px" placeholder="Email Address"
+								id="emailAddress" name="emailAddress" ngModel />
+							<label for="emailAddress" class="d-flex align-items-center fs-13px text-gray-600">Email
+								Address</label>
+						</div>
+						<div *ngIf="!hideVerifyPassword" class="mb-15px">
+							<button type="submit"
+								class="btn btn-primary d-block h-45px w-100 btn-lg fs-14px">Verify</button>
+						</div>
+						<!-- <div class="mb-40px pb-40px text-dark">
+							Not a member yet? Click <a routerLink="/register/v3" class="text-primary">here</a> to register.
+						</div>
+						 -->
+					</form>
+					<form #f="ngForm" (ngSubmit)="formVerifyForgotPasswordSubmit(f)" class="fs-13px"
+						*ngIf="verifyForgotPassword">
+						<h6>Verify Password</h6>
+						<h6> verification code sent to your email, please check</h6>
+						<div class="form-floating mb-15px">
+							<input type="text" class="form-control h-45px fs-13px" placeholder="Email Address"
+								id="emailAddress" name="emailAddress" ngModel="{{emailAddress}}" />
+							<label for="emailAddress" class="d-flex align-items-center fs-13px text-gray-600">Email
+								Address</label>
+						</div>
+						<div class="form-floating mb-15px">
+							<input type="text" class="form-control h-45px fs-13px" placeholder="Verification Code"
+								id="code" name="code" ngModel />
+							<label for="code" class="d-flex align-items-center fs-13px text-gray-600">Code</label>
+						</div>
+						<div class="form-floating mb-15px">
+							<input type="password" class="form-control h-45px fs-13px" placeholder="New Password"
+								id="newpassword" name="newpassword" ngModel />
+							<label for="password" class="d-flex align-items-center fs-13px text-gray-600">New
+								Password</label>
+						</div>
+						<div class="form-floating mb-15px">
+							<input type="password" class="form-control h-45px fs-13px"
+								placeholder="Re-enter New Password" id="reenterpassword" name="reenterpassword"
+								ngModel />
+							<label for="password" class="d-flex align-items-center fs-13px text-gray-600">Re-enter New
+								Password</label>
+						</div>
+
+						<div class="mb-15px">
+							<button type="submit"
+								class="btn btn-primary d-block h-45px w-100 btn-lg fs-14px">Verify</button>
+						</div>
+						<!-- <div class="mb-40px pb-40px text-dark">
+							Not a member yet? Click <a routerLink="/register/v3" class="text-primary">here</a> to register.
+						</div>
+						 -->
+					</form>
+					<form #f="ngForm" (ngSubmit)="confirmMFACode(f)" class="fs-13px" *ngIf="isMFASetUp">
+						<h4>Multi-factor Authentication</h4>
+						<hr />
+						<div>Enter an MFA code to complete sign-in.</div>
+						<b>MFA Code:</b>
+						<div class="form-floating mb-15px">
+							<input type="text" class="form-control h-45px fs-13px" name="mfacode"
+								placeholder="Please enter MFA code" id="mfacode" ngModel />
+						</div>
+						<div class="mb-15px">
+							<button type="submit"
+								class="btn btn-primary d-block h-45px w-100 btn-lg fs-14px">Submit</button>
+						</div>
+						<!-- <div class="mb-40px pb-40px text-dark">
+							Not a member yet? Click <a routerLink="/register/v3" class="text-primary">here</a> to register.
+						</div>
+						 -->
+					</form>
+					<ngx-loading [show]="loading" [config]="{
+							animationType: ngxLoadingAnimationTypes.circle,
+							primaryColour: primaryColour,
+							secondaryColour: secondaryColour,
+							backdropBorderRadius: '3px'
+						}"></ngx-loading>
+				</div>
+			</div>
+
+		</div>
+
+		<!--<div style="top:50%; left: 50%;">
+			 <div>
+				This is the ADC billing web site.  To go to the ADC informational web site go to http://www.coloradoadc.org
+
+Questions regarding PAYMENT REQUESTS, e-mail Kim at:  kim@coloradoadc.com, or call Kim directly at: 
+
+720-994-2854 Ext 154
+
+Questions regarding APPOINTMENTS, e-mail Wendy at:  wendy@coloradoadc.com, or call Wendy directly at: 
+
+720-994-2847 Ext 147
+
+PLEASE NOTE. THIS IS IMPORTANT!!
+
+* All bills should be submitted every thirty-one days, but must be submitted every forty-five days regardless of the amount outstanding.
+
+* Failure to bill as provided above will result in the non-payment of any dates outside of the forty-five days.
+
+* Billing must be in increments of .1 (one tenth) of an hour. 
+			</div> 
+		</div>-->
+		<!-- <ngb-carousel style="display: flex;">
+			<ng-template ngbSlide *ngFor="let image of appDafaults.images;let i = index">
+ 
+				<div class="wrapper news-image" style="background-image: url({{image.src}})">
+
+				</div>
+				<div class="carousel-caption" style="top: 9rem; font-weight: bold; right: 0.6rem; text-align: right;display: flex;justify-content: end;	flex-wrap: wrap;">
+					<h3 style="background:linear-gradient(to bottom, #082949 50%, #001d3d 100%);">  {{image.title}}</h3>
+					<p style="display: none;">{{ image.short }}</p>
+				</div> 
+			</ng-template>
+			;
+		</ngb-carousel> -->
+	</div>
+
+
+
+	<!-- END news-feed -->
+
+
+	<!-- END login-container -->
+</div>
+<!-- END login -->

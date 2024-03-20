@@ -1,0 +1,9 @@
+.custprofilepic{
+    border: 1px solid;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+:host ::ng-deep  .NgxEditor__Wrapper .NgxEditor__MenuBar {
+    background: #5c5f62 !important;
+}

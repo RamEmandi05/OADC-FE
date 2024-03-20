@@ -1,0 +1,105 @@
+<ol class="breadcrumb float-xl-end">
+    <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
+    <li class="breadcrumb-item"><a href="javascript:;">Manage Permissions</a></li>
+
+</ol>
+<!-- END breadcrumb -->
+<!-- BEGIN page-header -->
+<h1 class="page-header">Manage Permissions</h1>
+
+<div class="row mb-15px">
+    <div class="col-md-12">
+        <div class="" style="display: flex;">
+            <div class="m-2">
+                <label class="form-label col-form-label">Select Organization</label>
+            </div>
+            <div class="m-2" style="min-width: 15%">
+                <select class="form-select" (change)="changeRole()" [(ngModel)]="selectedOrganizationId">
+                    <option *ngFor="let ozn of organizations" [ngValue]="ozn._id">{{ozn.organizationName}}</option>
+                </select>
+            </div>
+            <div  class="m-2">
+                <label class="form-label col-form-label">Select Role</label>
+            </div>
+            <div  class="m-2" *ngIf="!isOganizationViewer">
+                <select class="form-select" (change)="changeRole()" [(ngModel)]="selectedRole">
+                    <option value="">Please Select</option>
+                    <option value="Admin" *ngIf="isAdmin">Admin</option>
+                    <option value="OrganizationAdmin">Organization Admin</option>
+                    <option value="Recruiter">Recruiter</option>
+                    <option value="OrganizationViewer">Applicant</option>
+                </select>
+            </div>
+            <!-- <div class=" ">
+                <div> <label class="form-label col-form-label col-md-2">Select Role</label></div>
+                <div class="" *ngIf="!isOganizationViewer">
+                    <select class="form-select" (change)="changeRole()" [(ngModel)]="selectedRole">
+                        <option value="">Please Select</option>
+                        <option value="Admin" *ngIf="isAdmin">Admin</option>
+                        <option value="OrganizationAdmin">Organization Admin</option>
+                        <option value="OrganizationViewer">Applicant</option>
+                    </select>
+                </div>
+            </div> -->
+        </div>
+
+
+    </div>
+
+
+</div>
+<br />
+<div class="row">
+    <div class="col-xl-12">
+        <app-ngxloader [ngxloader]="ngxloading"></app-ngxloader>
+        <panel title="Permissions">
+            <div class="table-responsive">
+                <form #f="ngForm" (ngSubmit)="formSubmit(f)" class="fs-13px">
+                    <div class="modal-body">
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <!-- <th style="width: 4rem">
+                                            <input type="checkbox" name="selectAll" class="form-check-input" [(ngModel)]="checkAllConstituents" value="" 
+                                            id="selectAll" checked="" (change) = checkCheckAllConstituents()>                        
+                                        </th> -->
+                                        <th></th>
+                                        <th>Create</th>
+                                        <th>Delete</th>
+                                        <th>Update</th>
+                                        <th>View</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let lnk of rolePermissions;">
+                                        <!-- <td>   <input type="checkbox" [ngModelOptions]="{standalone: true}" class="form-check-input" [(ngModel)]="user.isSelected"  (change) =changeConstituent(user) value={{user.isSelected}} [checked] = "user.isSelected==true" id={{user.lastName}}> </td>-->
+
+                                        <td>{{lnk.pageName}}</td>
+                                        <td><input type="checkbox" [ngModelOptions]="{standalone: true}"
+                                                class="form-check-input" [(ngModel)]="lnk.permissions.create"
+                                                value={{lnk.create}} [checked]="lnk.create==true"></td>
+                                        <td><input type="checkbox" [ngModelOptions]="{standalone: true}"
+                                                class="form-check-input" [(ngModel)]="lnk.permissions.delete"
+                                                value={{lnk.delete}} [checked]="lnk.delete==true"></td>
+                                        <td><input type="checkbox" [ngModelOptions]="{standalone: true}"
+                                                class="form-check-input" [(ngModel)]="lnk.permissions.update"
+                                                value={{lnk.update}} [checked]="lnk.update==true"></td>
+                                        <td><input type="checkbox" [ngModelOptions]="{standalone: true}"
+                                                class="form-check-input" [(ngModel)]="lnk.permissions.view"
+                                                value={{lnk.view}} [checked]="lnk.view==true"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" *ngIf="!isOganizationViewer" class="btn btn-success">Save</button>
+                    </div>
+                </form>
+            </div>
+        </panel>
+
+    </div>
+</div>

@@ -1,0 +1,99 @@
+/* Set all containers to 100% of the viewport height */
+
+.carousel, .carousel-inner, .item, .active {
+    height: 100vh !important;
+}
+
+.pic1, .pic2, .pic3 {
+    width: 100% !important;
+    height: 100% !important;;
+    background-position: center !important;;
+    /* background-size: cover !important; */
+    background-repeat: no-repeat !important;
+}
+
+/* .pic1 {
+  background-image: url(https://static.pexels.com/photos/356844/pexels-photo-356844.jpeg);
+}
+
+.pic2 {
+  background-image: url(https://static.pexels.com/photos/221315/pexels-photo-221315.jpeg);
+}
+
+.pic3 {
+  background-image: url(https://static.pexels.com/photos/161820/monument-valley-west-western-161820.jpeg);
+} */
+
+ngb-carousel .wrapper {
+    position: relative;
+    height: 100vh;
+    padding-top: 55%; /* Keep ratio for 900x500 images */
+  }
+  ngb-carousel .wrapper>img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+  .login.login-with-news-feed .news-feed .news-image, .register.register-with-news-feed .news-feed .news-image {
+    background-size: contain !important;
+}
+button[type=button].active  {
+    background-color: RED !important;
+    border: none !important;
+    color: white !important;
+    padding: 16px 32px !important;
+    text-decoration: none !important;
+    margin: 4px 2px !important;
+    cursor: pointer !important;
+  }
+
+  .demo_button{
+    margin: 10px 10px; 
+    position: absolute;
+    z-index: 1001;
+    top: 0;
+    right: 0;
+  }
+
+
+  .box.flex {
+    top: 25%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 50%;
+    left: 25%;
+    box-shadow: rgb(0, 0, 0) 5px 5px 5px;
+    border-radius: 5px;
+    border: 0px none;
+    height: auto;
+    text-align: center;
+    flex-direction: column;
+  }
+  
+  .box {
+    padding: .5rem;
+    height: 300px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.03);
+    border-radius: 4px;
+  
+    color: #000000;
+    /* font-family: "Lucida Console", Monaco, monospace; */
+    background: #e6f3ff;
+    border-bottom: 1px solid #F9F2D6;
+    border-right: 1px solid #F9F2D6;
+  }
+  
+  .box p {
+    /* max-width: 125px;
+    text-align: center;
+    background: rgba(255,255,255,0.5);
+    margin: .25rem; */
+    padding: .25rem;
+    font-size: medium;
+  }
